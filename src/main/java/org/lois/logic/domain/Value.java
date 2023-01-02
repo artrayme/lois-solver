@@ -1,4 +1,4 @@
-package org.example.logic.domain;
+package org.lois.logic.domain;
 
 @lombok.Value
 public class Value {

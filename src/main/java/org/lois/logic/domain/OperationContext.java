@@ -1,4 +1,4 @@
-package org.example.logic.domain;
+package org.lois.logic.domain;
 
 public interface OperationContext {
     Value not(Value value);
