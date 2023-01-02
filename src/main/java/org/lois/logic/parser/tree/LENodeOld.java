@@ -15,22 +15,18 @@ public class LENodeOld {
         this.expression = expression;
     }
 
-    @Override
     public LENodeOld getLeftChild() {
         return leftChild;
     }
 
-    @Override
     public void setLeftChild(LENodeOld leftChild) {
         this.leftChild = leftChild;
     }
 
-    @Override
     public LENodeOld getRightChild() {
         return rightChild;
     }
 
-    @Override
     public void setRightChild(LENodeOld rightChild) {
         this.rightChild = rightChild;
     }
@@ -48,12 +44,10 @@ public class LENodeOld {
         this.operatorSymbol = operatorSymbol;
     }
 
-    @Override
     public String getExpression() {
         return expression;
     }
 
-    @Override
     public boolean calcValue(Map<String, Boolean> parameters) {
         if (leftChild == null && rightChild == null) {
             return parameters.get(expression);
