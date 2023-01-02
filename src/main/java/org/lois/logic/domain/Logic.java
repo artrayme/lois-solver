@@ -1,6 +1,6 @@
 package org.lois.logic.domain;
 
-public interface OperationContext {
+public interface Logic {
     Value not(Value value);
     Value and(Value left, Value right);
     Value or(Value left, Value right);

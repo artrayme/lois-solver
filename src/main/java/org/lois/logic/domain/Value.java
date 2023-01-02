@@ -4,21 +4,10 @@ import java.util.Arrays;
 
 @lombok.Value
 public class Value {
-    boolean[] array;
+    Integer decimal;
 
-    public boolean[] getArray() {
-        if (array == null) {
-            throw new NullPointerException("Value can't be used without setting array");
-        }
-        return array;
-    }
-
-    public boolean[] getArrayCopy() {
-        return Arrays.copyOf(array, array.length);
-    }
-
-    public static Value of(boolean[] array) {
-        return new Value(array);
+    public static Value of(int decimal) {
+        return new Value(decimal);
     }
 
     /**
