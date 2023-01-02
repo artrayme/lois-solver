@@ -20,8 +20,8 @@ import java.util.function.Predicate;
 
 public class LEParser {
 
-    private Map<String, Value> valueMap;
-    private OperationContext proxyContext;
+    private Map<String, Variable> valueMap;
+    private OperationContextProxy proxyContext;
 
     private LEParser() {
     }
@@ -112,10 +112,10 @@ public class LEParser {
         if (expressionPart.length() < 3)
             throw new InvalidAtomicExpressionSyntaxException(expressionPart);
 
-        if (expressionPart.charAt(1) == Constants.NEGATION) {
-            LENode node = new LENegationNode(proxyContext);
-            node.setRightChild(parseRecursive(expressionPart.substring(2, expressionPart.length() - 1)));
-            return node;
+        if (expressionPart.charAt(1) == Constants.NEGATION
+                || expressionPart.charAt(1) == Constants.RHOMBUS
+                || expressionPart.charAt(1) == Constants.SQUARE) {
+            return convertToUnaryOperator(expressionPart.charAt(1), parseRecursive(expressionPart.substring(2, expressionPart.length() - 1)));
         } else if (checkBrackets(expressionPart) == 1) {
             return flatExpression(expressionPart.substring(1, expressionPart.length() - 1));
         } else {
@@ -125,10 +125,10 @@ public class LEParser {
     }
 
     private LEVariable buildVariableNode(String expressionPart) {
-        if (valueMap.containsKey(expressionPart)) return new LEVariable(new Variable(valueMap.get(expressionPart)));
+        if (valueMap.containsKey(expressionPart)) return new LEVariable(new Variable(valueMap.get(expressionPart).getValue()));
         else {
             var value = Value.placeholder();
-            valueMap.put(expressionPart, value);
+            valueMap.put(expressionPart, new Variable(value));
             return new LEVariable(new Variable(value));
         }
     }
@@ -160,7 +160,7 @@ public class LEParser {
             throw new InvalidAtomicExpressionSyntaxException(secondPart);
         }
 
-        return convertToOperator(operator.charAt(0), buildVariableNode(firstPart), buildVariableNode(secondPart));
+        return convertToBinaryOperator(operator.charAt(0), buildVariableNode(firstPart), buildVariableNode(secondPart));
 
     }
 
@@ -168,7 +168,7 @@ public class LEParser {
         LEParsedEntity entity = splitExpression(expressionPart.substring(1, expressionPart.length() - 1));
         if (entity.getOperator().length() != 1)
             throw new InvalidOperatorException(entity.getOperator());
-        return convertToOperator(entity.getOperator().charAt(0), parseRecursive(entity.getFirstPart()), parseRecursive(entity.getSecondPart()));
+        return convertToBinaryOperator(entity.getOperator().charAt(0), parseRecursive(entity.getFirstPart()), parseRecursive(entity.getSecondPart()));
     }
 
     private LEParsedEntity splitExpression(String expression) throws InvalidOperatorException, InvalidBracketsException {
@@ -212,7 +212,7 @@ public class LEParser {
         return part.toString();
     }
 
-    private LENode convertToOperator(Character sign, LENode left, LENode right) throws InvalidOperatorException {
+    private LENode convertToBinaryOperator(Character sign, LENode left, LENode right) throws InvalidOperatorException {
         var result = switch (sign) {
             case Constants.CONJUNCTION -> new LEConjunctionNode(proxyContext);
             case Constants.DISJUNCTION -> new LEDisjunctionNode(proxyContext);
@@ -225,6 +225,17 @@ public class LEParser {
         };
 
         result.setLeftChild(left);
+        result.setRightChild(right);
+        return result;
+    }
+    private LENode convertToUnaryOperator(Character sign, LENode right) throws InvalidOperatorException {
+        var result = switch (sign) {
+            case Constants.NEGATION -> new LEConjunctionNode(proxyContext);
+            case Constants.RHOMBUS -> new LEDiamondNode(proxyContext);
+            case Constants.SQUARE -> new LESquareNode(proxyContext);
+            default -> throw new InvalidOperatorException(sign);
+        };
+
         result.setRightChild(right);
         return result;
     }

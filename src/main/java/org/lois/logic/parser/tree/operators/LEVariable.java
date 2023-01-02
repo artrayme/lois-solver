@@ -13,6 +13,6 @@ public class LEVariable extends LEAbstractNode{
 
     @Override
     public Value calcValue() {
-        return variable.value();
+        return variable.getValue();
     }
 }

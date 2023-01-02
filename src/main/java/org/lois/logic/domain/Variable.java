@@ -1,4 +1,12 @@
 package org.lois.logic.domain;
 
-public record Variable(Value value) {
+import lombok.Data;
+
+@Data
+public class Variable {
+    private Value value;
+
+    public Variable(Value value) {
+        this.value = value;
+    }
 }
