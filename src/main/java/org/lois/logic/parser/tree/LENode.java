@@ -1,5 +1,8 @@
 package org.lois.logic.parser.tree;
 
+import org.lois.logic.domain.OperationContext;
+import org.lois.logic.domain.Value;
+
 public interface LENode {
     LENode getLeftChild();
 
@@ -9,5 +12,8 @@ public interface LENode {
 
     void setRightChild(LENode rightChild);
 
-    boolean calcValue();
+    OperationContext getContext();
+    void setContext(OperationContext context);
+
+    Value calcValue();
 }

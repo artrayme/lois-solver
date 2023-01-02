@@ -1,13 +1,30 @@
 package org.lois.logic.parser.tree;
 
-public class LETree {
-    private final LENodeOld root;
+import org.lois.logic.domain.OperationContext;
+import org.lois.logic.domain.Value;
 
-    public LETree(LENodeOld root) {
+import java.util.Map;
+
+public class LETree {
+    private final LENode root;
+    private final Map<String, Value> values;
+    private final OperationContext context;
+
+    public LETree(LENode root, Map<String, Value> values, OperationContext context) {
         this.root = root;
+        this.values = values;
+        this.context = context;
     }
 
-    public LENodeOld getRoot() {
+    public Map<String, Value> getValues() {
+        return values;
+    }
+
+    public OperationContext getContext() {
+        return context;
+    }
+
+    public LENode getRoot() {
         return root;
     }
 

@@ -1,19 +1,27 @@
 package org.lois.logic.parser;
 
+import org.lois.logic.domain.OperationContext;
+import org.lois.logic.domain.OperationContextProxy;
+import org.lois.logic.domain.Value;
+import org.lois.logic.domain.Variable;
 import org.lois.logic.parser.exceptions.InvalidBracketsException;
-import org.lois.logic.parser.tree.LENodeOld;
+import org.lois.logic.parser.tree.LENode;
 import org.lois.logic.parser.tree.LETree;
 import org.lois.logic.parser.exceptions.InvalidAtomicExpressionSyntaxException;
 import org.lois.logic.parser.exceptions.InvalidOperatorException;
 import org.lois.logic.parser.exceptions.InvalidSyntaxCharacterException;
+import org.lois.logic.parser.tree.operators.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public class LEParser {
 
+    private Map<String, Value> valueMap;
+    private OperationContext proxyContext;
 
     private LEParser() {
     }
@@ -27,7 +35,9 @@ public class LEParser {
         if (invalidSymbol.isPresent()) {
             throw new InvalidSyntaxCharacterException(invalidSymbol.get());
         }
-        LETree leTree = new LETree(LEParser.parseRecursive(expression));
+        LEParser.valueMap = new HashMap<>();
+        LEParser.proxyContext = new OperationContextProxy();
+        LETree leTree = new LETree(LEParser.parseRecursive(expression), LEParser.valueMap, LEParser.proxyContext);
         return leTree;
     }
 
@@ -90,29 +100,37 @@ public class LEParser {
         return ((symbol >= 'A' && symbol <= 'Z') || symbol == Constants.TRUE || symbol == Constants.FALSE);
     }
 
-    private LENodeOld parseRecursive(String expressionPart) throws InvalidAtomicExpressionSyntaxException, InvalidOperatorException, InvalidBracketsException {
+    private LENode parseRecursive(String expressionPart) throws InvalidAtomicExpressionSyntaxException, InvalidOperatorException, InvalidBracketsException {
         if (expressionPart.isEmpty())
             throw new InvalidAtomicExpressionSyntaxException(expressionPart);
         if (expressionPart.charAt(0) != Constants.OPEN_BRACKET) {
             if (!checkAtomicSyntax(expressionPart)) {
                 throw new InvalidAtomicExpressionSyntaxException(expressionPart);
             }
-            return new LENodeOld(expressionPart);
+            return buildVariableNode(expressionPart);
         }
         if (expressionPart.length() < 3)
             throw new InvalidAtomicExpressionSyntaxException(expressionPart);
 
-        LENodeOld node = new LENodeOld(expressionPart);
         if (expressionPart.charAt(1) == Constants.NEGATION) {
-            node.setOperator(convertToOperator(Constants.NEGATION), Constants.NEGATION);
+            LENode node = new LENegationNode(proxyContext);
             node.setRightChild(parseRecursive(expressionPart.substring(2, expressionPart.length() - 1)));
+            return node;
         } else if (checkBrackets(expressionPart) == 1) {
-            flatExpression(expressionPart.substring(1, expressionPart.length() - 1), node);
+            return flatExpression(expressionPart.substring(1, expressionPart.length() - 1));
         } else {
-            deepExpression(expressionPart, node);
+            return deepExpression(expressionPart);
         }
-        return node;
 
+    }
+
+    private LEVariable buildVariableNode(String expressionPart) {
+        if (valueMap.containsKey(expressionPart)) return new LEVariable(new Variable(valueMap.get(expressionPart)));
+        else {
+            var value = Value.placeholder();
+            valueMap.put(expressionPart, value);
+            return new LEVariable(new Variable(value));
+        }
     }
 
     private String getPartByRule(AtomicInteger index, String expressionPart, Predicate<Character> rule) {
@@ -124,7 +142,7 @@ public class LEParser {
         return part.toString();
     }
 
-    private void flatExpression(String expressionPart, LENodeOld node) throws InvalidOperatorException, InvalidAtomicExpressionSyntaxException {
+    private LENode flatExpression(String expressionPart) throws InvalidOperatorException, InvalidAtomicExpressionSyntaxException {
         AtomicInteger index = new AtomicInteger();
         String firstPart = getPartByRule(index, expressionPart, LEParser::isAtomicExpressionSymbol);
         if (!checkAtomicSyntax(firstPart)) {
@@ -142,18 +160,15 @@ public class LEParser {
             throw new InvalidAtomicExpressionSyntaxException(secondPart);
         }
 
-        node.setLeftChild(new LENodeOld(firstPart));
-        node.setOperator(convertToOperator(operator.charAt(0)), operator.charAt(0));
-        node.setRightChild(new LENodeOld(secondPart));
+        return convertToOperator(operator.charAt(0), buildVariableNode(firstPart), buildVariableNode(secondPart));
+
     }
 
-    private void deepExpression(String expressionPart, LENodeOld node) throws InvalidOperatorException, InvalidAtomicExpressionSyntaxException, InvalidBracketsException {
+    private LENode deepExpression(String expressionPart) throws InvalidOperatorException, InvalidAtomicExpressionSyntaxException, InvalidBracketsException {
         LEParsedEntity entity = splitExpression(expressionPart.substring(1, expressionPart.length() - 1));
         if (entity.getOperator().length() != 1)
             throw new InvalidOperatorException(entity.getOperator());
-        node.setOperator(convertToOperator(entity.getOperator().charAt(0)), entity.getOperator().charAt(0));
-        node.setLeftChild(parseRecursive(entity.getFirstPart()));
-        node.setRightChild(parseRecursive(entity.getSecondPart()));
+        return convertToOperator(entity.getOperator().charAt(0), parseRecursive(entity.getFirstPart()), parseRecursive(entity.getSecondPart()));
     }
 
     private LEParsedEntity splitExpression(String expression) throws InvalidOperatorException, InvalidBracketsException {
@@ -197,16 +212,20 @@ public class LEParser {
         return part.toString();
     }
 
-    private BiPredicate<Boolean, Boolean> convertToOperator(Character sign) throws InvalidOperatorException {
-        return switch (sign) {
-            case Constants.CONJUNCTION -> (a, b) -> a && b;
-            case Constants.DISJUNCTION -> (a, b) -> a || b;
-            case Constants.EQUALITY -> (a, b) -> a == b;
-            case Constants.NEGATION -> (a, b) -> !b;
-            case Constants.IMPLICIT -> (a, b) -> (!a) || b;
-            case Constants.RHOMBUS -> (a, b) -> a || b;
-            case Constants.SQUARE -> (a, b) -> a || b;
+    private LENode convertToOperator(Character sign, LENode left, LENode right) throws InvalidOperatorException {
+        var result = switch (sign) {
+            case Constants.CONJUNCTION -> new LEConjunctionNode(proxyContext);
+            case Constants.DISJUNCTION -> new LEDisjunctionNode(proxyContext);
+            case Constants.EQUALITY -> new LEEqualNode(proxyContext);
+            case Constants.NEGATION -> new LENegationNode(proxyContext);
+            case Constants.IMPLICIT -> new LEImplicationNode(proxyContext);
+            case Constants.RHOMBUS -> new LEDiamondNode(proxyContext);
+            case Constants.SQUARE -> new LESquareNode(proxyContext);
             default -> throw new InvalidOperatorException(sign);
         };
+
+        result.setLeftChild(left);
+        result.setRightChild(right);
+        return result;
     }
 }

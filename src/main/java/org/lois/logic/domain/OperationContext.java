@@ -7,4 +7,6 @@ public interface OperationContext {
     Value impl(Value left, Value right);
     Value diamond(Value left, Value right);
     Value square(Value left, Value right);
+
+    Value equal(Value left, Value right);
 }

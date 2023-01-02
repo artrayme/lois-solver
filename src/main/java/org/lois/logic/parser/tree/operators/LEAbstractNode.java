@@ -1,11 +1,12 @@
 package org.lois.logic.parser.tree.operators;
 
+import org.lois.logic.domain.OperationContext;
 import org.lois.logic.parser.tree.LENode;
 
 public abstract class LEAbstractNode implements LENode {
-
-    private LENode leftChild;
-    private LENode rightChild;
+    protected OperationContext context;
+    protected LENode leftChild;
+    protected LENode rightChild;
     @Override
     public LENode getLeftChild() {
         return leftChild;
@@ -26,4 +27,12 @@ public abstract class LEAbstractNode implements LENode {
         this.rightChild = rightChild;
     }
 
+    @Override
+    public OperationContext getContext() {
+        return context;
+    }
+    @Override
+    public void setContext(OperationContext context) {
+        this.context = context;
+    }
 }
