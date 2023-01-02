@@ -1,44 +1,26 @@
 package org.lois.logic.parser.tree;
 
-import org.lois.logic.domain.OperationContext;
-import org.lois.logic.domain.OperationContextProxy;
+import lombok.Data;
+import org.lois.logic.domain.Logic;
+import org.lois.logic.domain.LogicProxy;
 import org.lois.logic.domain.Value;
 import org.lois.logic.domain.Variable;
 
 import java.util.Map;
 
+@Data
 public class LETree {
     private final LENode root;
-    private Map<String, Variable> values;
-    private OperationContextProxy context;
+    private final Map<String, Variable> values;
+    private LogicProxy logicProxy;
 
-    public LETree(LENode root, Map<String, Variable> values, OperationContextProxy context) {
+    public LETree(LENode root, Map<String, Variable> values, LogicProxy logicProxy) {
         this.root = root;
         this.values = values;
-        this.context = context;
+        this.logicProxy = logicProxy;
     }
 
-    public Map<String, Variable> getValues() {
-        return values;
-    }
-
-    public OperationContext getContext() {
-        return context.getOriginal();
-    }
-
-    public LENode getRoot() {
-        return root;
-    }
-
-    public void setValues(Map<String, Variable> values) {
-        this.values = values;
-    }
-
-    public void setContext(OperationContext context) {
-        this.context.setOriginal(context);
-    }
-
-    public Value compute(){
+    public Value compute() {
         return root.calcValue();
     }
 }

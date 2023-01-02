@@ -1,7 +1,7 @@
 package org.lois.logic.parser;
 
-import org.lois.logic.domain.OperationContext;
-import org.lois.logic.domain.OperationContextProxy;
+import org.lois.logic.domain.Logic;
+import org.lois.logic.domain.LogicProxy;
 import org.lois.logic.domain.Value;
 import org.lois.logic.domain.Variable;
 import org.lois.logic.parser.exceptions.InvalidBracketsException;
@@ -19,9 +19,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 public class LEParser {
-
     private Map<String, Variable> valueMap;
-    private OperationContextProxy proxyContext;
+    private LogicProxy logicProxy;
 
     private LEParser() {
     }
@@ -36,8 +35,8 @@ public class LEParser {
             throw new InvalidSyntaxCharacterException(invalidSymbol.get());
         }
         LEParser.valueMap = new HashMap<>();
-        LEParser.proxyContext = new OperationContextProxy();
-        LETree leTree = new LETree(LEParser.parseRecursive(expression), LEParser.valueMap, LEParser.proxyContext);
+        LEParser.logicProxy = new LogicProxy();
+        LETree leTree = new LETree(LEParser.parseRecursive(expression), LEParser.valueMap, LEParser.logicProxy);
         return leTree;
     }
 
@@ -214,13 +213,13 @@ public class LEParser {
 
     private LENode convertToBinaryOperator(Character sign, LENode left, LENode right) throws InvalidOperatorException {
         var result = switch (sign) {
-            case Constants.CONJUNCTION -> new LEConjunctionNode(proxyContext);
-            case Constants.DISJUNCTION -> new LEDisjunctionNode(proxyContext);
-            case Constants.EQUALITY -> new LEEqualNode(proxyContext);
-            case Constants.NEGATION -> new LENegationNode(proxyContext);
-            case Constants.IMPLICIT -> new LEImplicationNode(proxyContext);
-            case Constants.RHOMBUS -> new LEDiamondNode(proxyContext);
-            case Constants.SQUARE -> new LESquareNode(proxyContext);
+            case Constants.CONJUNCTION -> new LEConjunctionNode(logicProxy);
+            case Constants.DISJUNCTION -> new LEDisjunctionNode(logicProxy);
+            case Constants.EQUALITY -> new LEEqualNode(logicProxy);
+            case Constants.NEGATION -> new LENegationNode(logicProxy);
+            case Constants.IMPLICIT -> new LEImplicationNode(logicProxy);
+            case Constants.RHOMBUS -> new LEDiamondNode(logicProxy);
+            case Constants.SQUARE -> new LESquareNode(logicProxy);
             default -> throw new InvalidOperatorException(sign);
         };
 
@@ -230,9 +229,9 @@ public class LEParser {
     }
     private LENode convertToUnaryOperator(Character sign, LENode right) throws InvalidOperatorException {
         var result = switch (sign) {
-            case Constants.NEGATION -> new LEConjunctionNode(proxyContext);
-            case Constants.RHOMBUS -> new LEDiamondNode(proxyContext);
-            case Constants.SQUARE -> new LESquareNode(proxyContext);
+            case Constants.NEGATION -> new LEConjunctionNode(logicProxy);
+            case Constants.RHOMBUS -> new LEDiamondNode(logicProxy);
+            case Constants.SQUARE -> new LESquareNode(logicProxy);
             default -> throw new InvalidOperatorException(sign);
         };
 

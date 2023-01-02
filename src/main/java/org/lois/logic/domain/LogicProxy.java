@@ -1,14 +1,14 @@
 package org.lois.logic.domain;
 
-public class OperationContextProxy implements OperationContext{
+public class LogicProxy implements Logic {
 
-    OperationContext original;
+    Logic original;
 
-    public OperationContext getOriginal() {
+    public Logic getOriginal() {
         return original;
     }
 
-    public void setOriginal(OperationContext original) {
+    public void setOriginal(Logic original) {
         this.original = original;
     }
 
@@ -28,18 +28,18 @@ public class OperationContextProxy implements OperationContext{
     }
 
     @Override
-    public Value impl(Value left, Value right) {
-        return original.impl(left, right);
+    public Value implication(Value left, Value right) {
+        return original.implication(left, right);
     }
 
     @Override
-    public Value diamond(Value left, Value right) {
-        return original.diamond(left, right);
+    public Value diamond(Value value) {
+        return original.diamond(value);
     }
 
     @Override
-    public Value square(Value left, Value right) {
-        return original.square(left, right);
+    public Value square(Value value) {
+        return original.square(value);
     }
 
     @Override

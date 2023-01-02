@@ -1,11 +1,11 @@
 package org.lois.logic.parser.tree.operators;
 
-import org.lois.logic.domain.OperationContext;
+import org.lois.logic.domain.Logic;
 import org.lois.logic.domain.Value;
 
 public class LEConjunctionNode extends LEAbstractNode{
 
-    public LEConjunctionNode(OperationContext context) {
+    public LEConjunctionNode(Logic context) {
         this.context = context;
     }
     @Override
