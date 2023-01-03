@@ -187,8 +187,8 @@ class LEParserTest {
     {
         var tree = LEParser.valueOf("((A∧A)→B)");
         tree.setLogicProxy(new ClassicLogic());
-        tree.getValues().get("A").setValue(new Value(new boolean[]{false, false}));
-        tree.getValues().get("B").setValue(new Value(new boolean[]{true, true}));
+        tree.getValues().get("A").setValue(Value.of(new boolean[]{false, false}));
+        tree.getValues().get("B").setValue(Value.of(new boolean[]{true, true}));
         var result = tree.compute();
         System.out.println(result);
     }

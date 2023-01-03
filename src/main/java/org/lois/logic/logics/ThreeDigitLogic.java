@@ -7,12 +7,12 @@ import org.lois.logic.domain.Value;
 public final class ThreeDigitLogic extends BitByBitLogic {
     @Override
     protected Value newFalse() {
-        return null;
+        return Value.of(new boolean[]{false, false});
     }
 
     @Override
     protected Value newTrue() {
-        return null;
+        return Value.of(new boolean[]{true, true});
     }
 
     @Override

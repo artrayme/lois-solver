@@ -6,6 +6,10 @@ import java.util.Arrays;
 public class Value {
     boolean[] array;
 
+    private Value(boolean[] array) {
+        this.array = array;
+    }
+
     public boolean[] getArray() {
         if (array == null) {
             throw new NullPointerException("Value can't be used without setting array");
