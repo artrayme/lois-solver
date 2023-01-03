@@ -216,10 +216,7 @@ public class LEParser {
             case Constants.CONJUNCTION -> new LEConjunctionNode(logicProxy);
             case Constants.DISJUNCTION -> new LEDisjunctionNode(logicProxy);
             case Constants.EQUALITY -> new LEEqualNode(logicProxy);
-            case Constants.NEGATION -> new LENegationNode(logicProxy);
             case Constants.IMPLICIT -> new LEImplicationNode(logicProxy);
-            case Constants.RHOMBUS -> new LEDiamondNode(logicProxy);
-            case Constants.SQUARE -> new LESquareNode(logicProxy);
             default -> throw new InvalidOperatorException(sign);
         };
 
