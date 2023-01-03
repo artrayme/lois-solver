@@ -1,8 +1,10 @@
 package org.lois.logic.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class Variable {
     private Value value;
 

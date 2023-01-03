@@ -1,15 +1,16 @@
 package org.lois.logic.parser.tree;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.lois.logic.domain.Logic;
 import org.lois.logic.domain.LogicProxy;
 import org.lois.logic.domain.Value;
 import org.lois.logic.domain.Variable;
 
 import java.util.Map;
-import java.util.Set;
 
-@Data
+@Getter
+@Setter
 public class LETree {
     private final LENode root;
     private final Map<String, Variable> values;
