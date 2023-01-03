@@ -58,4 +58,25 @@ class LogicTableGeneratorTest {
         var results = table.stream().map(TableEntry::result).toList();
         assertEquals(results, BitConverterUtils.toFourDigitLogicBits(List.of(3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3)));
     }
+
+    @Test
+    public void generateTruthTableTripletLogic3() throws InvalidOperatorException, InvalidSyntaxCharacterException, InvalidAtomicExpressionSyntaxException, InvalidBracketsException {
+        var tree = LEParser.valueOf("(((!A)→(!(□A)))~((!(◊B))∧B))");
+        tree.setLogicProxy(new ThreeDigitLogic());
+        var tableGenerator = new LogicTableGenerator();
+        var table = tableGenerator.generateTruthTable(tree, new TripletLogicStateGenerator(tree.getValues().keySet().size()));
+
+        var results = table.stream().map(TableEntry::result).toList();
+        assertEquals(results, BitConverterUtils.toTripletLogicBits(List.of(0,0,0,0,0,0,0,0,0)));
+    }
+    @Test
+    public void generateTruthTableFourDigitLogic3() throws InvalidOperatorException, InvalidSyntaxCharacterException, InvalidAtomicExpressionSyntaxException, InvalidBracketsException {
+        var tree = LEParser.valueOf("(((!A)→(!(□A)))~((!(◊B))∧B))");
+        tree.setLogicProxy(new FourDigitLogic());
+        var tableGenerator = new LogicTableGenerator();
+        var table = tableGenerator.generateTruthTable(tree, new FourDigitLogicStateGenerator(tree.getValues().keySet().size()));
+
+        var results = table.stream().map(TableEntry::result).toList();
+        assertEquals(results, BitConverterUtils.toFourDigitLogicBits(List.of(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)));
+    }
 }

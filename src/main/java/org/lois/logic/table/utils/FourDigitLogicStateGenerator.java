@@ -12,6 +12,7 @@ public class FourDigitLogicStateGenerator implements StateGenerator {
 
     public FourDigitLogicStateGenerator(int varsCount) {
         this.varsCount = varsCount;
+        reset();
     }
 
     @Override
