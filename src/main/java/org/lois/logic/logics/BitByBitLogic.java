@@ -1,4 +1,4 @@
-package org.lois.logic.contexts;
+package org.lois.logic.logics;
 
 import java.util.Arrays;
 import java.util.function.BiFunction;
@@ -8,7 +8,10 @@ import org.lois.logic.domain.Logic;
 import org.lois.logic.domain.Value;
 
 //TODO: check size of value arrays
-abstract class AbstractLogic implements Logic {
+/**
+ * Logic implementation with bit by bit operations of classic logic
+ */
+abstract class BitByBitLogic implements Logic {
     protected abstract Value newFalse();
 
     protected abstract Value newTrue();
@@ -71,12 +74,26 @@ abstract class AbstractLogic implements Logic {
     }
 
     @Override
-    public Value diamond(Value left) {
-        throw new UnsupportedOperationException();
+    public Value diamond(Value value) {
+        var array = value.getArray();
+
+        for (var bit : array) {
+            if (bit) {
+                return newTrue();
+            }
+        }
+        return newFalse();
     }
 
     @Override
-    public Value square(Value left) {
-        throw new UnsupportedOperationException();
+    public Value square(Value value) {
+        var array = value.getArray();
+
+        for (var bit : array) {
+            if (!bit) {
+                return newFalse();
+            }
+        }
+        return newTrue();
     }
 }

@@ -6,15 +6,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.lois.logic.contexts.ClassicLogic;
-import org.lois.logic.domain.LogicProxy;
 import org.lois.logic.domain.Value;
+import org.lois.logic.logics.ClassicLogic;
 import org.lois.logic.parser.exceptions.InvalidAtomicExpressionSyntaxException;
 import org.lois.logic.parser.exceptions.InvalidBracketsException;
 import org.lois.logic.parser.exceptions.InvalidOperatorException;
 import org.lois.logic.parser.exceptions.InvalidSyntaxCharacterException;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -114,7 +112,8 @@ class LEParserTest {
             "((A∨!A)~(!B)),!A"
     })
     void invalidAtomicExpressionSyntaxExceptionTest(String expression, String invalidAtomicExpression) {
-        InvalidAtomicExpressionSyntaxException invalidOperatorException = assertThrows(InvalidAtomicExpressionSyntaxException.class, () -> {
+        InvalidAtomicExpressionSyntaxException invalidOperatorException =
+                assertThrows(InvalidAtomicExpressionSyntaxException.class, () -> {
             LEParser.valueOf(expression);
         });
         assertEquals(invalidAtomicExpression, invalidOperatorException.getExpression());
@@ -182,12 +181,15 @@ class LEParserTest {
     }
 
     @Test
-    void temp() throws InvalidOperatorException, InvalidSyntaxCharacterException, InvalidAtomicExpressionSyntaxException, InvalidBracketsException {
-                var tree = LEParser.valueOf("((A∧A)→B)");
-                tree.setLogicProxy(new ClassicLogic());
-                tree.getValues().get("A").setValue(new Value(new boolean[]{false, false}));
-                tree.getValues().get("B").setValue(new Value(new boolean[]{true, true}));
-                var result = tree.compute();
+    void temp()
+            throws InvalidOperatorException, InvalidSyntaxCharacterException,
+            InvalidAtomicExpressionSyntaxException, InvalidBracketsException
+    {
+        var tree = LEParser.valueOf("((A∧A)→B)");
+        tree.setLogicProxy(new ClassicLogic());
+        tree.getValues().get("A").setValue(new Value(new boolean[]{false, false}));
+        tree.getValues().get("B").setValue(new Value(new boolean[]{true, true}));
+        var result = tree.compute();
         System.out.println(result);
     }
 
