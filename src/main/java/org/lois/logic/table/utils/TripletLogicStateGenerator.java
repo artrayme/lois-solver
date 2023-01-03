@@ -33,7 +33,7 @@ public class TripletLogicStateGenerator implements StateGenerator {
     public List<Value> getCurrent() {
         var result = new ArrayList<Value>();
         for (Integer operandValue : currentState) {
-            result.add(Value.of(BitConverterUtils.toTripletLogicBits(operandValue)));
+            result.add(BitConverterUtils.toTripletLogicBits(operandValue));
         }
         return result;
     }
