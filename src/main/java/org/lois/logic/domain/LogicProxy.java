@@ -1,8 +1,17 @@
 package org.lois.logic.domain;
 
+import org.lois.logic.contexts.ClassicLogic;
+
 public class LogicProxy implements Logic {
 
     Logic original;
+
+    public LogicProxy(Logic logic) {
+        original = logic;
+    }
+
+    public LogicProxy() {
+    }
 
     public Logic getOriginal() {
         return original;

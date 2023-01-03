@@ -23,4 +23,8 @@ public class LETree {
     public Value compute() {
         return root.calcValue();
     }
+
+    public void setLogicProxy(Logic logic) {
+        this.logicProxy.setOriginal(logic);
+    }
 }

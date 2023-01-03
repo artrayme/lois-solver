@@ -6,7 +6,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.lois.logic.domain.OperationContext;
+import org.lois.logic.contexts.ClassicLogic;
+import org.lois.logic.domain.LogicProxy;
 import org.lois.logic.domain.Value;
 import org.lois.logic.parser.exceptions.InvalidAtomicExpressionSyntaxException;
 import org.lois.logic.parser.exceptions.InvalidBracketsException;
@@ -182,10 +183,12 @@ class LEParserTest {
 
     @Test
     void temp() throws InvalidOperatorException, InvalidSyntaxCharacterException, InvalidAtomicExpressionSyntaxException, InvalidBracketsException {
-                var tree = LEParser.valueOf("(((□((A∧B)→1))~0)∧(!A))");
-//                tree.setContext();
-                tree.getValues().forEach((key, value)->{value.setValue(new Value(new boolean[]{true, false}));});
+                var tree = LEParser.valueOf("((A∧A)→B)");
+                tree.setLogicProxy(new ClassicLogic());
+                tree.getValues().get("A").setValue(new Value(new boolean[]{false, false}));
+                tree.getValues().get("B").setValue(new Value(new boolean[]{true, true}));
                 var result = tree.compute();
+        System.out.println(result);
     }
 
 }

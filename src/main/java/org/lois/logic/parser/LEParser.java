@@ -124,11 +124,11 @@ public class LEParser {
     }
 
     private LEVariable buildVariableNode(String expressionPart) {
-        if (valueMap.containsKey(expressionPart)) return new LEVariable(new Variable(valueMap.get(expressionPart).getValue()));
+        if (valueMap.containsKey(expressionPart)) return new LEVariable(valueMap.get(expressionPart));
         else {
-            var value = Value.placeholder();
-            valueMap.put(expressionPart, new Variable(value));
-            return new LEVariable(new Variable(value));
+            var variable = new Variable(Value.placeholder());
+            valueMap.put(expressionPart, variable);
+            return new LEVariable(variable);
         }
     }
 
@@ -229,7 +229,7 @@ public class LEParser {
     }
     private LENode convertToUnaryOperator(Character sign, LENode right) throws InvalidOperatorException {
         var result = switch (sign) {
-            case Constants.NEGATION -> new LEConjunctionNode(logicProxy);
+            case Constants.NEGATION -> new LENegationNode(logicProxy);
             case Constants.RHOMBUS -> new LEDiamondNode(logicProxy);
             case Constants.SQUARE -> new LESquareNode(logicProxy);
             default -> throw new InvalidOperatorException(sign);
