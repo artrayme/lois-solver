@@ -96,7 +96,7 @@ public class LEParser {
     }
 
     private static boolean isAtomicExpressionSymbol(char symbol) {
-        return ((symbol >= 'A' && symbol <= 'Z') || symbol == Constants.TRUE || symbol == Constants.FALSE);
+        return ((symbol >= 'A' && symbol <= 'Z') || (symbol >= 'a' && symbol <= 'z') || symbol == Constants.TRUE || symbol == Constants.FALSE);
     }
 
     private LENode parseRecursive(String expressionPart) throws InvalidAtomicExpressionSyntaxException, InvalidOperatorException, InvalidBracketsException {

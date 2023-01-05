@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head th:replace="fragments/header :: header-css">
+    <title>Index</title></head>
+
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container">
+
+    <div class="row">
+
+
+        <div class="col-sm-12 col-sm-8 col-md-6 col-sm-offset-4 col-md-offset-3">
+            <form class="form-signin" autocomplete="off" th:action="@{''}" th:object="${formula}" method="POST">
+                <fieldset>
+                    <h1>Formula</h1>
+                    <div class="form-group">
+                        <label>Formula</label>
+                        <input type="text" th:field="*{formula}" class="form-control input-lg" title="formula"
+                               autofocus="true" id="mainInput"/>
+                    </div>
+
+                    <button class="btn btn-outline-dark" onclick="document.getElementById('mainInput').value += '∧';">∧</button>
+                    <button class="btn btn-outline-dark" onclick="document.getElementById('mainInput').value += '∨';">∨</button>
+                    <button class="btn btn-outline-dark" onclick="document.getElementById('mainInput').value += '→';">→</button>
+                    <button class="btn btn-outline-dark" onclick="document.getElementById('mainInput').value += '□';">□</button>
+                    <button class="btn btn-outline-dark" onclick="document.getElementById('mainInput').value += '◊';">◊</button>
+                    <br>
+                    <input class="btn btn-outline-dark" type="submit"/>
+                </fieldset>
+            </form>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th th:each="column: ${header}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${!message.isEmpty()}">
+                <td colspan="2" th:text="${message}"></td>
+            </tr>
+            <tr th:each="line : ${logic3}">
+                <td th:each="column: ${line}" th:text="${column}"> </td>
+            </tr>
+
+            <tr th:each="line : ${logic4}">
+                <td th:each="column: ${line}" th:text="${column}"> </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+
+</html>
