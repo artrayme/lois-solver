@@ -60,12 +60,11 @@ abstract class BitByBitLogic implements Logic {
         var l = left.getArray();
         var r = right.getArray();
 
+        var result = left.getArrayCopy();
         for (int i = 0; i < l.length; i++) {
-            if (l[i] != r[i]) {
-                return newFalse();
-            }
+            result[i] = l[i] == r[i];
         }
-        return newTrue();
+        return Value.of(result);
     }
 
     @Override

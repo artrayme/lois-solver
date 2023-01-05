@@ -51,13 +51,13 @@ public class ThreeDigitLogicTest extends BaseLogicTest {
     private static Stream<Arguments> equalProvider() {
         return Stream.of(
                 Arguments.of(value(false, false), value(false, false), value(true, true)),
-                Arguments.of(value(false, false), value(false, true), value(false, false)),
+                Arguments.of(value(false, false), value(false, true), value(false, true)),
                 Arguments.of(value(false, false), value(true, true), value(false, false)),
-                Arguments.of(value(false, true), value(false, false), value(false, false)),
+                Arguments.of(value(false, true), value(false, false), value(false, true)),
                 Arguments.of(value(false, true), value(false, true), value(true, true)),
-                Arguments.of(value(false, true), value(true, true), value(false, false)),
+                Arguments.of(value(false, true), value(true, true), value(false, true)),
                 Arguments.of(value(true, true), value(false, false), value(false, false)),
-                Arguments.of(value(true, true), value(false, true), value(false, false)),
+                Arguments.of(value(true, true), value(false, true), value(false, true)),
                 Arguments.of(value(true, true), value(true, true), value(true, true))
         );
     }
@@ -67,7 +67,7 @@ public class ThreeDigitLogicTest extends BaseLogicTest {
                 Arguments.of(value(false, false), value(false, false), value(true, true)),
                 Arguments.of(value(false, false), value(false, true), value(true, true)),
                 Arguments.of(value(false, false), value(true, true), value(true, true)),
-                Arguments.of(value(false, true), value(false, false), value(true, false)),
+                Arguments.of(value(false, true), value(false, false), value(false, true)),
                 Arguments.of(value(false, true), value(false, true), value(true, true)),
                 Arguments.of(value(false, true), value(true, true), value(true, true)),
                 Arguments.of(value(true, true), value(false, false), value(false, false)),
