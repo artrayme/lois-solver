@@ -36,21 +36,16 @@
         </div>
 
         <table>
-            <thead>
-            <tr>
-                <th th:each="column: ${header}"></th>
-            </tr>
-            </thead>
             <tbody>
             <tr th:if="${!message.isEmpty()}">
                 <td colspan="2" th:text="${message}"></td>
             </tr>
-            <tr th:each="line : ${logic3}">
-                <td th:each="column: ${line}" th:text="${column}"> </td>
+            <tr style="background-color:white; font-size: 18px;" th:each="line : ${logic3}">
+                <td style="background-color:white; font-size: 18px;" th:each="column: ${line}" th:text="${column}"> </td>
             </tr>
 
-            <tr th:each="line : ${logic4}">
-                <td th:each="column: ${line}" th:text="${column}"> </td>
+            <tr style="background-color:white; font-size: 18px;" th:each="line : ${logic4}">
+                <td style="background-color:white; font-size: 18px;" th:each="column: ${line}" th:text="${column}"> </td>
             </tr>
             </tbody>
         </table>
